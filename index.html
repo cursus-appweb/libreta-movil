@@ -530,7 +530,7 @@ button{font:inherit;cursor:pointer;border:none;background:none}
         <div class="cover-seal">🎓</div>
         <div class="cover-line"></div>
         <h1 class="cover-title">Libreta<br>Universitaria</h1>
-        <p class="cover-sub">27 jun 2026 · 16:40</p>
+        <p class="cover-sub">27 jun 2026 · 18:46</p>
         <div class="cover-line"></div>
         <div class="cover-stats">
           <div class="cstat"><div class="cn" data-count="25">0</div><div class="cl">Total</div></div>
@@ -1988,11 +1988,53 @@ function showToast(msg,isErr){
 }
 
 /* ── sync automático al cargar (si hay servidor disponible) ── */
+function cargarDesdeSupabase(){
+  if(!supaOK) return;
+  fetch(SUPA_URL+'/rest/v1/asistencias?select=materia,fecha,asistio&user_id=eq.'+USER_ID+'&order=fecha.asc',{
+    headers:{'apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY}
+  })
+  .then(function(r){ return r.json(); })
+  .then(function(rows){
+    var byMat = {};
+    rows.forEach(function(r){ (byMat[r.materia]=byMat[r.materia]||[]).push(r); });
+    Object.keys(byMat).forEach(function(mat){
+      var hist  = document.getElementById('hist-'+mat);
+      var pctEl = document.getElementById('pct-'+mat);
+      var stEl  = document.getElementById('stats-'+mat);
+      if(!hist||!pctEl||!stEl) return;
+      var entradas = byMat[mat];
+      var pres = entradas.filter(function(e){return e.asistio;}).length;
+      var total = entradas.length, aus = total-pres;
+      var pct  = total>0 ? Math.round(pres/total*100) : 0;
+      /* reconstruir historial */
+      hist.innerHTML = '';
+      entradas.slice().reverse().forEach(function(e){
+        var span = document.createElement('span');
+        span.className = 'ah-item '+(e.asistio?'ah-ok':'ah-no');
+        span.textContent = (e.asistio?'✓ ':'✗ ')+e.fecha;
+        hist.appendChild(span);
+      });
+      pctEl.textContent = pct+'%';
+      pctEl.className   = 'asist-pct '+(pct>=75?'pct-ok':pct>=50?'pct-warn':'pct-bad');
+      stEl.textContent  = pres+' pres · '+aus+' aus · '+total+' clase'+(total===1?'':'s');
+    });
+    /* limpiar pendientes que ya están en la nube */
+    var lista = JSON.parse(localStorage.getItem(STORE_KEY)||'[]');
+    lista = lista.filter(function(p){
+      return !rows.some(function(r){return r.materia===p.materia&&r.fecha===p.fecha;});
+    });
+    localStorage.setItem(STORE_KEY, JSON.stringify(lista));
+    _actualizarBadge();
+  })
+  .catch(function(){});
+}
+
 window.addEventListener('load', function(){
   resizeCvs(); buildStars(); drawStars(); drawGlobe(0,false);
   requestAnimationFrame(animateGlobe);
-  /* intentar sincronizar pendientes en segundo plano */
-  setTimeout(sincronizarPendientes, 2000);
+  /* 1. subir pendientes, luego 2. recargar desde Supabase */
+  setTimeout(sincronizarPendientes, 1500);
+  setTimeout(cargarDesdeSupabase,   3000);
 });
 
 /* ── exponer al scope global (llamadas desde onclick del HTML) ── */
