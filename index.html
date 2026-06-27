@@ -530,7 +530,7 @@ button{font:inherit;cursor:pointer;border:none;background:none}
         <div class="cover-seal">🎓</div>
         <div class="cover-line"></div>
         <h1 class="cover-title">Libreta<br>Universitaria</h1>
-        <p class="cover-sub">27 jun 2026 · 18:46</p>
+        <p class="cover-sub">27 jun 2026 · 18:56</p>
         <div class="cover-line"></div>
         <div class="cover-stats">
           <div class="cstat"><div class="cn" data-count="25">0</div><div class="cl">Total</div></div>
@@ -1831,109 +1831,92 @@ window.addEventListener('resize', function(){
 });
 
 /* ══════════════════════════════════════════
-   ASISTENCIAS — Supabase como fuente de verdad
-   Fallback a localStorage cuando no hay internet.
+   ASISTENCIAS — asistencias_v2 como fuente de verdad única.
+   Patrón: estado en memoria → UI inmediato → PATCH JSONB completo a Supabase.
 ══════════════════════════════════════════ */
 var SUPA_URL  = 'https://hufflxvocbfbhrayylad.supabase.co';
 var SUPA_KEY  = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh1ZmZseHZvY2JmYmhyYXl5bGFkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI0OTc2ODUsImV4cCI6MjA5ODA3MzY4NX0.MVqKYtuKeOlT4jgx13sTT2lZ2tuzChEmLLQMCe1xzG4';
-var USER_ID   = '3aa752f3-cca8-4cce-94f2-16610fd8b640';
-var STORE_KEY = 'libreta_asist_pending_v2';
 var supaOK    = !!(SUPA_URL && SUPA_URL.indexOf('supabase') !== -1);
+var _estadoMat = {};   /* {slug: {"dd/mm/yyyy": true|false}} — cache en memoria */
 
-function _guardarLocal(materia, fecha, asistio){
-  var lista = JSON.parse(localStorage.getItem(STORE_KEY)||'[]');
-  lista = lista.filter(function(p){ return !(p.materia===materia && p.fecha===fecha); });
-  lista.push({materia:materia, fecha:fecha, asistio:asistio, ts:Date.now()});
-  localStorage.setItem(STORE_KEY, JSON.stringify(lista));
-  _actualizarBadge();
-}
-
-function _borrarLocal(materia, fecha){
-  var lista = JSON.parse(localStorage.getItem(STORE_KEY)||'[]');
-  lista = lista.filter(function(p){ return !(p.materia===materia && p.fecha===fecha); });
-  localStorage.setItem(STORE_KEY, JSON.stringify(lista));
-  _actualizarBadge();
-}
-
-function _actualizarBadge(){
-  var n     = JSON.parse(localStorage.getItem(STORE_KEY)||'[]').length;
+function _actualizarBadge(ok){
   var badge = document.getElementById('sync-badge');
   if(!badge) return;
-  if(!supaOK){
-    badge.textContent = '⚠ Supabase no configurado';
-    badge.className   = 'sync-badge sync-pending';
-    return;
-  }
-  badge.textContent = n > 0 ? n+' pendiente'+(n>1?'s de subir':'') : '✓ Todo en la nube';
-  badge.className   = 'sync-badge '+(n>0?'sync-pending':'sync-ok');
+  if(!supaOK){ badge.textContent='⚠ Supabase no configurado'; badge.className='sync-badge sync-pending'; return; }
+  badge.textContent = ok ? '✓ Todo en la nube' : '⟳ Sincronizando…';
+  badge.className   = 'sync-badge '+(ok?'sync-ok':'sync-pending');
 }
 
-function _postSupabase(materia, fecha, asistio, onOk, onFail){
-  fetch(SUPA_URL+'/rest/v1/asistencias?on_conflict=user_id,materia,fecha',{
-    method:'POST',
-    headers:{
-      'apikey':        SUPA_KEY,
-      'Authorization': 'Bearer '+SUPA_KEY,
-      'Content-Type':  'application/json',
-      'Prefer':        'resolution=merge-duplicates'
-    },
-    body: JSON.stringify({user_id:USER_ID, materia:materia, fecha:fecha, asistio:asistio})
-  })
-  .then(function(r){
-    if(r.ok||r.status===201||r.status===204) onOk();
-    else r.text().then(function(t){ onFail('HTTP '+r.status+' '+t); });
-  })
-  .catch(onFail);
+function _parseFecha(s){
+  if(!s) return 0;
+  var p=s.split('/'); if(p.length!==3) return 0;
+  return new Date(+p[2],+p[1]-1,+p[0]).getTime();
 }
 
-function sincronizarPendientes(){
-  if(!supaOK) return;
-  var lista = JSON.parse(localStorage.getItem(STORE_KEY)||'[]');
-  if(!lista.length) return;
-  var i = 0;
-  function _sig(){
-    if(i >= lista.length) return;
-    var p = lista[i++];
-    _postSupabase(p.materia, p.fecha, p.asistio,
-      function(){ _borrarLocal(p.materia, p.fecha); _sig(); },
-      function(){ _sig(); }
-    );
+function _actualizarCardCompleta(slug, datos){
+  var hist  = document.getElementById('hist-'+slug);
+  var pctEl = document.getElementById('pct-'+slug);
+  var stEl  = document.getElementById('stats-'+slug);
+  if(!hist||!pctEl||!stEl) return;
+  var entradas = Object.keys(datos).map(function(f){ return {fecha:f, asistio:datos[f]}; });
+  entradas.sort(function(a,b){ return _parseFecha(b.fecha)-_parseFecha(a.fecha); });
+  hist.innerHTML = '';
+  if(!entradas.length){
+    hist.innerHTML='<span class="ah-empty">Sin registros aún — marcá tu primera clase</span>';
+  } else {
+    entradas.forEach(function(e){
+      var span=document.createElement('span');
+      span.className='ah-item '+(e.asistio?'ah-ok':'ah-no');
+      span.textContent=(e.asistio?'✓ ':'✗ ')+e.fecha;
+      hist.appendChild(span);
+    });
   }
-  _sig();
+  var pres=entradas.filter(function(e){return e.asistio;}).length;
+  var total=entradas.length, aus=total-pres;
+  var pct=total>0?Math.round(pres/total*100):0;
+  pctEl.textContent=pct+'%';
+  pctEl.className='asist-pct '+(pct>=75?'pct-ok':pct>=50?'pct-warn':'pct-bad');
+  stEl.textContent=pres+' pres · '+aus+' aus · '+total+' clase'+(total===1?'':'s');
 }
 
 function marcarAsist(materia, asistio, btn){
-  if(btn) btn.disabled = true;
-  var hoy   = new Date();
-  var fecha = ('0'+hoy.getDate()).slice(-2)+'/'+('0'+(hoy.getMonth()+1)).slice(-2)+'/'+hoy.getFullYear();
+  if(btn) btn.disabled=true;
+  var hoy=new Date();
+  var fecha=('0'+hoy.getDate()).slice(-2)+'/'+('0'+(hoy.getMonth()+1)).slice(-2)+'/'+hoy.getFullYear();
 
-  /* 1. UI + localStorage SIEMPRE, antes de cualquier red */
+  /* 1. Actualizar UI inmediatamente */
   _actualizarUi(materia, asistio, fecha);
-  _guardarLocal(materia, fecha, asistio);
+
+  /* 2. Actualizar cache en memoria */
+  if(!_estadoMat[materia]) _estadoMat[materia]={};
+  _estadoMat[materia][fecha]=asistio;
 
   if(!supaOK){
-    showToast((asistio?'✓ Presente':'✗ Ausencia')+' guardado localmente');
+    showToast((asistio?'✓ Presente':'✗ Ausencia')+' guardado');
     if(btn) setTimeout(function(){btn.disabled=false;},400);
     return;
   }
 
-  /* 2. Intentar subir a Supabase */
-  try{
-    _postSupabase(materia, fecha, asistio,
-      function(){
-        _borrarLocal(materia, fecha);
-        showToast(asistio ? '✓ Presente guardado' : '✗ Ausencia guardada');
-        if(btn) setTimeout(function(){btn.disabled=false;},400);
-      },
-      function(){
-        showToast('Sin señal — guardado, sube cuando vuelva internet');
-        if(btn) setTimeout(function(){btn.disabled=false;},400);
-      }
-    );
-  } catch(e){
-    showToast('Sin señal — guardado, sube cuando vuelva internet');
+  /* 3. PATCH JSONB completo a Supabase (igual que la hermana) */
+  _actualizarBadge(false);
+  fetch(SUPA_URL+'/rest/v1/asistencias_v2?on_conflict=materia',{
+    method:'POST',
+    headers:{
+      'apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY,
+      'Content-Type':'application/json','Prefer':'resolution=merge-duplicates'
+    },
+    body:JSON.stringify({materia:materia, datos:_estadoMat[materia], updated_at:new Date().toISOString()})
+  })
+  .then(function(r){
+    _actualizarBadge(r.ok||r.status===201||r.status===204);
+    showToast(asistio?'✓ Presente guardado':'✗ Ausencia guardada');
     if(btn) setTimeout(function(){btn.disabled=false;},400);
-  }
+  })
+  .catch(function(){
+    _actualizarBadge(false);
+    showToast('Sin señal — marcá de nuevo cuando vuelva internet');
+    if(btn) setTimeout(function(){btn.disabled=false;},400);
+  });
 }
 
 function _actualizarUi(materia,asistio,fecha){
@@ -1987,54 +1970,28 @@ function showToast(msg,isErr){
   },2600);
 }
 
-/* ── sync automático al cargar (si hay servidor disponible) ── */
+/* ── carga inicial desde Supabase (fuente de verdad única) ── */
 function cargarDesdeSupabase(){
   if(!supaOK) return;
-  fetch(SUPA_URL+'/rest/v1/asistencias?select=materia,fecha,asistio&user_id=eq.'+USER_ID+'&order=fecha.asc',{
+  fetch(SUPA_URL+'/rest/v1/asistencias_v2?select=materia,datos',{
     headers:{'apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY}
   })
   .then(function(r){ return r.json(); })
   .then(function(rows){
-    var byMat = {};
-    rows.forEach(function(r){ (byMat[r.materia]=byMat[r.materia]||[]).push(r); });
-    Object.keys(byMat).forEach(function(mat){
-      var hist  = document.getElementById('hist-'+mat);
-      var pctEl = document.getElementById('pct-'+mat);
-      var stEl  = document.getElementById('stats-'+mat);
-      if(!hist||!pctEl||!stEl) return;
-      var entradas = byMat[mat];
-      var pres = entradas.filter(function(e){return e.asistio;}).length;
-      var total = entradas.length, aus = total-pres;
-      var pct  = total>0 ? Math.round(pres/total*100) : 0;
-      /* reconstruir historial */
-      hist.innerHTML = '';
-      entradas.slice().reverse().forEach(function(e){
-        var span = document.createElement('span');
-        span.className = 'ah-item '+(e.asistio?'ah-ok':'ah-no');
-        span.textContent = (e.asistio?'✓ ':'✗ ')+e.fecha;
-        hist.appendChild(span);
-      });
-      pctEl.textContent = pct+'%';
-      pctEl.className   = 'asist-pct '+(pct>=75?'pct-ok':pct>=50?'pct-warn':'pct-bad');
-      stEl.textContent  = pres+' pres · '+aus+' aus · '+total+' clase'+(total===1?'':'s');
+    rows.forEach(function(row){
+      var slug=row.materia, datos=row.datos||{};
+      _estadoMat[slug]=datos;
+      _actualizarCardCompleta(slug, datos);
     });
-    /* limpiar pendientes que ya están en la nube */
-    var lista = JSON.parse(localStorage.getItem(STORE_KEY)||'[]');
-    lista = lista.filter(function(p){
-      return !rows.some(function(r){return r.materia===p.materia&&r.fecha===p.fecha;});
-    });
-    localStorage.setItem(STORE_KEY, JSON.stringify(lista));
-    _actualizarBadge();
+    _actualizarBadge(true);
   })
-  .catch(function(){});
+  .catch(function(){ _actualizarBadge(false); });
 }
 
 window.addEventListener('load', function(){
   resizeCvs(); buildStars(); drawStars(); drawGlobe(0,false);
   requestAnimationFrame(animateGlobe);
-  /* 1. subir pendientes, luego 2. recargar desde Supabase */
-  setTimeout(sincronizarPendientes, 1500);
-  setTimeout(cargarDesdeSupabase,   3000);
+  setTimeout(cargarDesdeSupabase, 800);
 });
 
 /* ── exponer al scope global (llamadas desde onclick del HTML) ── */
