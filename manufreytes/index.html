@@ -4,6 +4,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Libreta Universitaria</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#c9a84c">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Libreta">
+<link rel="apple-touch-icon" href="icon-192.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=Dancing+Script:wght@400;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -530,12 +536,12 @@ button{font:inherit;cursor:pointer;border:none;background:none}
         <div class="cover-seal">🎓</div>
         <div class="cover-line"></div>
         <h1 class="cover-title">Libreta<br>Universitaria</h1>
-        <p class="cover-sub">28 jun 2026 · 16:13</p>
+        <p class="cover-sub">29 jun 2026 · 17:41</p>
         <div class="cover-line"></div>
         <div class="cover-stats">
-          <div class="cstat"><div class="cn" data-count="26">0</div><div class="cl">Total</div></div>
+          <div class="cstat"><div class="cn" data-count="24">0</div><div class="cl">Total</div></div>
           <div class="cstat"><div class="cn cn-ok" data-count="24">0</div><div class="cl">Aprobadas</div></div>
-          <div class="cstat"><div class="cn cn-b" data-count="2">0</div><div class="cl">En curso</div></div>
+          <div class="cstat"><div class="cn cn-b" data-count="0">0</div><div class="cl">En curso</div></div>
           <div class="cstat"><div class="cn cn-g" id="prom-cover">8.46</div><div class="cl">Promedio</div></div>
         </div>
         <button class="btn-open" onclick="goPage('pg-index')">Abrir libro →</button>
@@ -548,7 +554,6 @@ button{font:inherit;cursor:pointer;border:none;background:none}
           <button class="idx-btn" onclick="goPage('pg-1año')"><span class="idx-yr">1º Año</span><span class="idx-st">10 materias · 10 aprobadas</span><span class="idx-arr">→</span></button>
 <button class="idx-btn" onclick="goPage('pg-2año')"><span class="idx-yr">2º Año</span><span class="idx-st">10 materias · 10 aprobadas</span><span class="idx-arr">→</span></button>
 <button class="idx-btn" onclick="goPage('pg-3año')"><span class="idx-yr">3º Año</span><span class="idx-st">4 materias · 4 aprobadas</span><span class="idx-arr">→</span></button>
-<button class="idx-btn" onclick="goPage('pg-4año')"><span class="idx-yr">4º Año</span><span class="idx-st">2 materias · 0 aprobadas</span><span class="idx-arr">→</span></button>
           <div class="idx-sep"></div>
           <button class="idx-btn asist-idx-btn" onclick="goPage('pg-asistencias')">
             <span class="idx-yr" style="color:#818cf8">📋 Asistencias</span>
@@ -1362,101 +1367,8 @@ button{font:inherit;cursor:pointer;border:none;background:none}
     </div>
   </div></div>
 </article></div></div></div>
-<div class="bpage" id="pg-4año"><div class="pg-inner"><div class="pg-header"><button class="btn-back" onclick="goPage('pg-index')">← Índice</button><span class="pg-title">4º Año</span><span class="pg-count">2 materias</span></div><div class="cards-grid"><article class="card" tabindex="0" data-estado="en_curso">
-  <div class="card-tilt"><div class="card-flip">
-    <div class="face front">
-      <div class="shimmer"></div>
-      <div class="ring-center">
-        <div class="card-ring rok" style="--df:188.5;--do:56.55;">
-          <svg viewBox="0 0 68 68" aria-hidden="true">
-            <circle class="ring-bg"  cx="34" cy="34" r="30"/>
-            <circle class="ring-val" cx="34" cy="34" r="30"/>
-          </svg>
-          <span class="ring-nota">7</span>
-        </div>
-      </div>
-      <div class="card-body">
-        <span class="card-ey">Asignatura</span>
-        <h3 class="card-nom">Manuel Freytes</h3>
-        <div class="card-bdgs">
-          <span class="badge bdg-curso">En curso</span><span class="badge bdg-year">4º Año</span>
-        </div>
-      </div>
-      <span class="fhint" aria-hidden="true">↻</span>
-    </div>
-    <div class="face back">
-      <div class="shimmer"></div>
-      <div class="back-top">
-        <div><span class="card-ey">Detalle</span><h3 class="card-nom">Manuel Freytes</h3></div>
-        <span class="badge bdg-curso">En curso</span>
-      </div>
-      <div class="sep"></div>
-      <div class="dgrid"><span class="dl">Modalidad</span><span class="dv">Promocional</span><span class="dl">Meta</span><span class="dv">6</span><span class="dl">Parciales</span><span class="dv">7</span><span class="dl">Próx. examen</span><span class="dv">30/06/2026</span><span class="dl">Nota final</span><span class="dv">7</span></div>
-      <span class="fhint" aria-hidden="true">↻</span>
-    </div>
-  </div></div>
-</article><article class="card" tabindex="0" data-estado="en_curso">
-  <div class="card-tilt"><div class="card-flip">
-    <div class="face front">
-      <div class="shimmer"></div>
-      <div class="ring-center">
-        <div class="card-ring rbad" style="--df:188.5;--do:150.8;">
-          <svg viewBox="0 0 68 68" aria-hidden="true">
-            <circle class="ring-bg"  cx="34" cy="34" r="30"/>
-            <circle class="ring-val" cx="34" cy="34" r="30"/>
-          </svg>
-          <span class="ring-nota">2</span>
-        </div>
-      </div>
-      <div class="card-body">
-        <span class="card-ey">Asignatura</span>
-        <h3 class="card-nom">Tomy Lesco</h3>
-        <div class="card-bdgs">
-          <span class="badge bdg-curso">En curso</span><span class="badge bdg-year">4º Año</span>
-        </div>
-      </div>
-      <span class="fhint" aria-hidden="true">↻</span>
-    </div>
-    <div class="face back">
-      <div class="shimmer"></div>
-      <div class="back-top">
-        <div><span class="card-ey">Detalle</span><h3 class="card-nom">Tomy Lesco</h3></div>
-        <span class="badge bdg-curso">En curso</span>
-      </div>
-      <div class="sep"></div>
-      <div class="dgrid"><span class="dl">Modalidad</span><span class="dv">Final</span><span class="dl">Parciales</span><span class="dv">2</span><span class="dl">Nota final</span><span class="dv">2</span></div>
-      <span class="fhint" aria-hidden="true">↻</span>
-    </div>
-  </div></div>
-</article></div></div></div>
-<div class="bpage" id="pg-calendario"><div class="pg-inner"><div class="pg-header"><button class="btn-back" onclick="goPage('pg-index')">← Índice</button><span class="pg-title">Calendario</span></div><div class="ag-timeline"><div class="ag-item ag-urgente"><div class="ag-dot"></div><div class="ag-date"><span class="ag-day">30</span><span class="ag-mon">jun</span></div><div class="ag-info"><span class="ag-tit">parcial 12</span><span class="ag-mat">Manuel Freytes</span></div><span class="ag-cnt ag-cnt-urgente">En 2 días</span></div></div></div></div>
-<div class="bpage" id="pg-asistencias"><div class="pg-inner"><div class="pg-header"><button class="btn-back" onclick="goPage('pg-index')">← Índice</button><span class="pg-title">Asistencias</span><span class="pg-count">2 en curso</span></div><div id="sync-badge" class="sync-badge sync-ok">✓ Todo sincronizado</div><div class="asist-nota"><strong>¿Cómo funciona?</strong> Marcá cada clase —presente o ausente— y el registro queda guardado en el celular aunque la compu esté apagada. Cuando la compu esté activa, todo se sincroniza automático.</div><div class="asist-card" data-mat="MANUEL_FREYTES">
-  <div class="asist-top">
-    <div class="asist-pct pct-warn" id="pct-MANUEL_FREYTES">50%</div>
-    <div class="asist-info">
-      <div class="asist-nom">Manuel Freytes</div>
-      <div class="asist-stats" id="stats-MANUEL_FREYTES">1&nbsp;pres · 1&nbsp;aus · 2&nbsp;clases</div>
-    </div>
-  </div>
-  <div class="ah-hist" id="hist-MANUEL_FREYTES"><span class="ah-item ah-no">✗ 26/06/2026</span><span class="ah-item ah-ok">✓ 25/06/2026</span></div>
-  <div class="asist-btns">
-    <button class="asist-btn btn-pres" onclick="marcarAsist('MANUEL_FREYTES',true,this)">✓&nbsp;Presente</button>
-    <button class="asist-btn btn-aus"  onclick="marcarAsist('MANUEL_FREYTES',false,this)">✗&nbsp;Ausente</button>
-  </div>
-</div><div class="asist-card" data-mat="TOMY_LESCO">
-  <div class="asist-top">
-    <div class="asist-pct " id="pct-TOMY_LESCO">—</div>
-    <div class="asist-info">
-      <div class="asist-nom">Tomy Lesco</div>
-      <div class="asist-stats" id="stats-TOMY_LESCO">0&nbsp;pres · 0&nbsp;aus · 0&nbsp;clases</div>
-    </div>
-  </div>
-  <div class="ah-hist" id="hist-TOMY_LESCO"><span class="ah-empty">Sin registros aún — marcá tu primera clase</span></div>
-  <div class="asist-btns">
-    <button class="asist-btn btn-pres" onclick="marcarAsist('TOMY_LESCO',true,this)">✓&nbsp;Presente</button>
-    <button class="asist-btn btn-aus"  onclick="marcarAsist('TOMY_LESCO',false,this)">✗&nbsp;Ausente</button>
-  </div>
-</div></div></div>
+<div class="bpage" id="pg-calendario"><div class="pg-inner"><div class="pg-header"><button class="btn-back" onclick="goPage('pg-index')">← Índice</button><span class="pg-title">Calendario</span></div><div class="ag-timeline"><p class="no-ev">No hay evaluaciones registradas.</p></div></div></div>
+<div class="bpage" id="pg-asistencias"><div class="pg-inner"><div class="pg-header"><button class="btn-back" onclick="goPage('pg-index')">← Índice</button><span class="pg-title">Asistencias</span><span class="pg-count">0 en curso</span></div><div id="sync-badge" class="sync-badge sync-ok">✓ Todo sincronizado</div><p class="no-ev">No hay materias en curso registradas.</p></div></div>
 
     </div><!-- #book -->
   </div><!-- #book-persp -->
@@ -2053,6 +1965,11 @@ window.skipIntro   = skipIntro;
 window.marcarAsist = marcarAsist;
 
 })();
+</script>
+<script>
+if('serviceWorker' in navigator){
+  navigator.serviceWorker.register('sw.js').catch(function(){});
+}
 </script>
 </body>
 </html>
