@@ -50,51 +50,75 @@ button{font:inherit;cursor:pointer;border:none;background:none}
   position:fixed;inset:0;z-index:300;
   display:flex;flex-direction:column;
   align-items:center;justify-content:center;
-  background:#000;
-  transition:opacity 1.2s ease;
+  background:linear-gradient(160deg,#0a0a14 0%,#0d0d1e 60%,#0a0a14 100%);
+  transition:opacity .9s ease;
 }
 #intro.fade-out{opacity:0;pointer-events:none}
-
-#stars-cv{position:absolute;inset:0;z-index:0}
-#globe-wrap{
-  position:relative;z-index:1;
-  transition:transform 2.2s cubic-bezier(.25,.46,.45,.94);
-  will-change:transform;
+#intro-icon{
+  font-size:clamp(3.2rem,10vw,5rem);
+  animation:introIcon .65s cubic-bezier(.34,1.56,.64,1) .15s both;
 }
-#globe-cv{display:block;border-radius:50%}
-
-#intro-labels{
-  position:absolute;z-index:2;
-  bottom:18%;left:0;right:0;
-  text-align:center;
-  opacity:0;transition:opacity 1s ease;
+#intro-ring{
+  position:absolute;
+  width:clamp(140px,35vw,210px);height:clamp(140px,35vw,210px);
+  border-radius:50%;
+  border:1.5px solid rgba(245,215,100,.18);
+  animation:introRing 2.4s ease .2s both;
 }
-#intro-labels.show{opacity:1}
-#loc-txt{
+#intro-ring2{
+  position:absolute;
+  width:clamp(180px,45vw,270px);height:clamp(180px,45vw,270px);
+  border-radius:50%;
+  border:1px solid rgba(245,215,100,.07);
+  animation:introRing 2.8s ease .4s both;
+}
+#intro-title{
   font-family:'Space Grotesk',sans-serif;
-  font-size:clamp(1rem,3vw,1.5rem);
-  font-weight:600;letter-spacing:.12em;
-  color:var(--gold2);text-transform:uppercase;
-  margin-bottom:10px;
-}
-#byline{
-  font-family:'Dancing Script',cursive;
-  font-size:clamp(2rem,6vw,3.2rem);
+  font-size:clamp(1.7rem,5.5vw,2.8rem);
   font-weight:700;color:#f5edd8;
   letter-spacing:.03em;
-  text-shadow:0 2px 16px rgba(0,0,0,.9),0 0 40px rgba(255,240,200,.12);
-  opacity:0;transition:opacity .9s ease .4s;
+  margin-top:22px;
+  animation:introUp .5s ease .7s both;
 }
-#byline.show{opacity:1}
-
+#intro-sub{
+  font-family:'Space Grotesk',sans-serif;
+  font-size:clamp(.78rem,2.2vw,.95rem);
+  color:rgba(255,255,255,.35);
+  letter-spacing:.18em;text-transform:uppercase;
+  margin-top:8px;
+  animation:introUp .5s ease .95s both;
+}
+#intro-bar{
+  width:0;height:2px;border-radius:2px;
+  background:linear-gradient(90deg,var(--gold1),var(--gold2));
+  margin-top:26px;
+  animation:introBar 1.6s cubic-bezier(.4,0,.2,1) 1.2s both;
+}
 #skip-btn{
   position:absolute;bottom:5%;right:5%;z-index:10;
-  color:rgba(255,255,255,.35);font-size:.75rem;
-  border:1px solid rgba(255,255,255,.15);
+  color:rgba(255,255,255,.28);font-size:.75rem;
+  border:1px solid rgba(255,255,255,.12);
   padding:5px 14px;border-radius:999px;
   transition:all .2s;background:transparent;
+  animation:introUp .4s ease 1.1s both;
 }
-#skip-btn:hover{color:#fff;border-color:rgba(255,255,255,.5)}
+#skip-btn:hover{color:#fff;border-color:rgba(255,255,255,.4)}
+@keyframes introIcon{
+  from{opacity:0;transform:scale(.3) rotate(-15deg)}
+  to{opacity:1;transform:scale(1) rotate(0deg)}
+}
+@keyframes introRing{
+  0%{opacity:0;transform:scale(.6)}
+  40%{opacity:1}
+  100%{opacity:.6;transform:scale(1)}
+}
+@keyframes introUp{
+  from{opacity:0;transform:translateY(16px)}
+  to{opacity:1;transform:translateY(0)}
+}
+@keyframes introBar{
+  0%{width:0;opacity:0}8%{opacity:1}100%{width:clamp(120px,30vw,180px);opacity:1}
+}
 
 /* ══════════════════════════════════════════
    BOOK SCENE
@@ -650,14 +674,12 @@ button{font:inherit;cursor:pointer;border:none;background:none}
      INTRO — GLOBO TERRÁQUEO
 ════════════════════════════════ -->
 <div id="intro">
-  <canvas id="stars-cv"></canvas>
-  <div id="globe-wrap">
-    <canvas id="globe-cv"></canvas>
-  </div>
-  <div id="intro-labels">
-    <div id="loc-txt">Argentina &nbsp;·&nbsp; Córdoba</div>
-    <div id="byline">by manufreytes&clarafreytes</div>
-  </div>
+  <div id="intro-ring2"></div>
+  <div id="intro-ring"></div>
+  <div id="intro-icon">🎓</div>
+  <div id="intro-title">Libreta Universitaria</div>
+  <div id="intro-sub">Tu historial académico</div>
+  <div id="intro-bar"></div>
   <button id="skip-btn" onclick="skipIntro()">Saltar →</button>
 </div>
 
@@ -673,7 +695,7 @@ button{font:inherit;cursor:pointer;border:none;background:none}
         <div class="cover-seal">🎓</div>
         <div class="cover-line"></div>
         <h1 class="cover-title">Libreta<br>Universitaria</h1>
-        <p class="cover-sub">29 jun 2026 · 19:52</p>
+        <p class="cover-sub">30 jun 2026 · 16:30</p>
         <div class="cover-line"></div>
         <div class="cover-stats">
           <div class="cstat"><div class="cn" data-count="28">0</div><div class="cl">Total</div></div>
@@ -1570,7 +1592,7 @@ button{font:inherit;cursor:pointer;border:none;background:none}
         <span class="badge bdg-curso">En curso</span>
       </div>
       <div class="sep"></div>
-      <div class="dgrid"><span class="dl">Modalidad</span><span class="dv">Promocional</span><span class="dl">Meta</span><span class="dv">8</span><span class="dl">Parciales</span><span class="dv">6</span><span class="dl">Nota final</span><span class="dv">6</span></div>
+      <div class="dgrid"><span class="dl">Modalidad</span><span class="dv">Promocional</span><span class="dl">Meta</span><span class="dv">8</span><span class="dl">Parciales</span><span class="dv">6</span><span class="dl">Próx. examen</span><span class="dv">22/07/2026</span><span class="dl">Nota final</span><span class="dv">6</span></div>
       <span class="fhint" aria-hidden="true">↻</span>
       <button class="card-edit-btn" onclick="event.stopPropagation();abrirModal('manuel','Manuel')">✏ Editar nota</button>
     </div>
@@ -1680,7 +1702,7 @@ button{font:inherit;cursor:pointer;border:none;background:none}
     </div>
   </div></div>
 </article></div></div></div>
-<div class="bpage" id="pg-calendario"><div class="pg-inner"><div class="pg-header"><button class="btn-back" onclick="goPage('pg-index')">← Índice</button><span class="pg-title">Calendario</span></div><div class="ag-timeline"><div class="ag-item ag-proximo"><div class="ag-dot"></div><div class="ag-date"><span class="ag-day">10</span><span class="ag-mon">jul</span></div><div class="ag-info"><span class="ag-tit">Parcial 1</span><span class="ag-mat">Manuel5</span></div><span class="ag-cnt ag-cnt-proximo">En 11 días</span></div><div class="ag-item ag-futuro"><div class="ag-dot"></div><div class="ag-date"><span class="ag-day">17</span><span class="ag-mon">jul</span></div><div class="ag-info"><span class="ag-tit">Parcial 2</span><span class="ag-mat">Manuel5</span></div><span class="ag-cnt ag-cnt-futuro">En 18 días</span></div><div class="ag-item ag-futuro"><div class="ag-dot"></div><div class="ag-date"><span class="ag-day">30</span><span class="ag-mon">jul</span></div><div class="ag-info"><span class="ag-tit">Parcial 3</span><span class="ag-mat">Manuel6</span></div><span class="ag-cnt ag-cnt-futuro">En 31 días</span></div></div>
+<div class="bpage" id="pg-calendario"><div class="pg-inner"><div class="pg-header"><button class="btn-back" onclick="goPage('pg-index')">← Índice</button><span class="pg-title">Calendario</span></div><div class="ag-timeline"><div class="ag-item ag-proximo"><div class="ag-dot"></div><div class="ag-date"><span class="ag-day">10</span><span class="ag-mon">jul</span></div><div class="ag-info"><span class="ag-tit">Parcial 1</span><span class="ag-mat">Manuel5</span></div><span class="ag-cnt ag-cnt-proximo">En 10 días</span></div><div class="ag-item ag-futuro"><div class="ag-dot"></div><div class="ag-date"><span class="ag-day">17</span><span class="ag-mon">jul</span></div><div class="ag-info"><span class="ag-tit">Parcial 2</span><span class="ag-mat">Manuel5</span></div><span class="ag-cnt ag-cnt-futuro">En 17 días</span></div><div class="ag-item ag-futuro"><div class="ag-dot"></div><div class="ag-date"><span class="ag-day">22</span><span class="ag-mon">jul</span></div><div class="ag-info"><span class="ag-tit">parcial 2</span><span class="ag-mat">Manuel</span></div><span class="ag-cnt ag-cnt-futuro">En 22 días</span></div><div class="ag-item ag-futuro"><div class="ag-dot"></div><div class="ag-date"><span class="ag-day">30</span><span class="ag-mon">jul</span></div><div class="ag-info"><span class="ag-tit">Parcial 3</span><span class="ag-mat">Manuel6</span></div><span class="ag-cnt ag-cnt-futuro">En 30 días</span></div></div>
 <div class="parc-section">
   <div class="parc-sec-title">📅 Agregar evaluación al calendario</div>
   <div id="msg-parcial" class="form-msg"></div>
@@ -1715,39 +1737,39 @@ button{font:inherit;cursor:pointer;border:none;background:none}
 </div></div></div>
 <div class="bpage" id="pg-asistencias"><div class="pg-inner"><div class="pg-header"><button class="btn-back" onclick="goPage('pg-index')">← Índice</button><span class="pg-title">Asistencias</span><span class="pg-count">4 en curso</span></div><div id="sync-badge" class="sync-badge sync-ok">✓ Todo sincronizado</div><div class="asist-nota"><strong>¿Cómo funciona?</strong> Marcá cada clase —presente o ausente— y el registro queda guardado en el celular aunque la compu esté apagada. Cuando la compu esté activa, todo se sincroniza automático.</div><div class="asist-card" data-mat="manuel">
   <div class="asist-top">
-    <div class="asist-pct " id="pct-manuel">—</div>
+    <div class="asist-pct pct-ok" id="pct-manuel">100%</div>
     <div class="asist-info">
       <div class="asist-nom">Manuel</div>
-      <div class="asist-stats" id="stats-manuel">0&nbsp;pres · 0&nbsp;aus · 0&nbsp;clases</div>
+      <div class="asist-stats" id="stats-manuel">1&nbsp;pres · 0&nbsp;aus · 1&nbsp;clase</div>
     </div>
   </div>
-  <div class="ah-hist" id="hist-manuel"><span class="ah-empty">Sin registros aún — marcá tu primera clase</span></div>
+  <div class="ah-hist" id="hist-manuel"><span class="ah-item ah-ok">✓ 28/06/2026</span></div>
   <div class="asist-btns">
     <button class="asist-btn btn-pres" onclick="marcarAsist('manuel',true,this)">✓&nbsp;Presente</button>
     <button class="asist-btn btn-aus"  onclick="marcarAsist('manuel',false,this)">✗&nbsp;Ausente</button>
   </div>
 </div><div class="asist-card" data-mat="manuel5">
   <div class="asist-top">
-    <div class="asist-pct " id="pct-manuel5">—</div>
+    <div class="asist-pct pct-warn" id="pct-manuel5">67%</div>
     <div class="asist-info">
       <div class="asist-nom">Manuel5</div>
-      <div class="asist-stats" id="stats-manuel5">0&nbsp;pres · 0&nbsp;aus · 0&nbsp;clases</div>
+      <div class="asist-stats" id="stats-manuel5">2&nbsp;pres · 1&nbsp;aus · 3&nbsp;clases</div>
     </div>
   </div>
-  <div class="ah-hist" id="hist-manuel5"><span class="ah-empty">Sin registros aún — marcá tu primera clase</span></div>
+  <div class="ah-hist" id="hist-manuel5"><span class="ah-item ah-no">✗ 29/06/2026</span><span class="ah-item ah-ok">✓ 28/06/2026</span><span class="ah-item ah-ok">✓ 27/06/2026</span></div>
   <div class="asist-btns">
     <button class="asist-btn btn-pres" onclick="marcarAsist('manuel5',true,this)">✓&nbsp;Presente</button>
     <button class="asist-btn btn-aus"  onclick="marcarAsist('manuel5',false,this)">✗&nbsp;Ausente</button>
   </div>
 </div><div class="asist-card" data-mat="manuel6">
   <div class="asist-top">
-    <div class="asist-pct " id="pct-manuel6">—</div>
+    <div class="asist-pct pct-ok" id="pct-manuel6">100%</div>
     <div class="asist-info">
       <div class="asist-nom">Manuel6</div>
-      <div class="asist-stats" id="stats-manuel6">0&nbsp;pres · 0&nbsp;aus · 0&nbsp;clases</div>
+      <div class="asist-stats" id="stats-manuel6">1&nbsp;pres · 0&nbsp;aus · 1&nbsp;clase</div>
     </div>
   </div>
-  <div class="ah-hist" id="hist-manuel6"><span class="ah-empty">Sin registros aún — marcá tu primera clase</span></div>
+  <div class="ah-hist" id="hist-manuel6"><span class="ah-item ah-ok">✓ 29/06/2026</span></div>
   <div class="asist-btns">
     <button class="asist-btn btn-pres" onclick="marcarAsist('manuel6',true,this)">✓&nbsp;Presente</button>
     <button class="asist-btn btn-aus"  onclick="marcarAsist('manuel6',false,this)">✗&nbsp;Ausente</button>
@@ -1786,7 +1808,7 @@ button{font:inherit;cursor:pointer;border:none;background:none}
                 <label class="form-lbl">Año</label>
                 <select id="ag-anio" class="form-sel">
                   <option>1º Año</option><option>2º Año</option><option>3º Año</option>
-                  <option>4º Año</option><option>5º Año</option><option>Optativa</option>
+                  <option>4º Año</option><option>5º Año</option><option>6º Año</option><option>Optativa</option>
                 </select>
               </div>
               <div class="form-campo">
@@ -1842,271 +1864,9 @@ button{font:inherit;cursor:pointer;border:none;background:none}
 /* ══════════════════════════════════════════
    GLOBE
 ══════════════════════════════════════════ */
-var sCv = document.getElementById('stars-cv');
-var gCv = document.getElementById('globe-cv');
-var sCtx = sCv.getContext('2d');
-var gCtx = gCv.getContext('2d');
-var globeR   = 0;   // rotation degrees
-var GS       = 180; // canvas size (will be set by resize)
-var GR       = 0;   // sphere radius
-var GCX      = 0;
-var GCY      = 0;
-
-function resizeCvs(){
-  var vm = Math.min(window.innerWidth, window.innerHeight);
-  GS  = Math.round(vm * 0.52);
-  GS  = Math.max(180, Math.min(380, GS));
-  GR  = Math.round(GS * 0.42);
-  GCX = GS / 2; GCY = GS / 2;
-  sCv.width  = window.innerWidth;  sCv.height = window.innerHeight;
-  gCv.width  = GS;                 gCv.height = GS;
-  gCv.style.width  = GS + 'px';
-  gCv.style.height = GS + 'px';
-  drawStars();
-}
-
-/* ── stars ── */
-var stars = [];
-function buildStars(){
-  stars = [];
-  for(var i=0;i<220;i++){
-    stars.push({
-      x: Math.random()*sCv.width,
-      y: Math.random()*sCv.height,
-      r: Math.random()*1.4+.3,
-      a: Math.random()*.85+.15
-    });
-  }
-}
-function drawStars(){
-  sCtx.clearRect(0,0,sCv.width,sCv.height);
-  sCtx.fillStyle='#000';
-  sCtx.fillRect(0,0,sCv.width,sCv.height);
-  stars.forEach(function(s){
-    sCtx.beginPath();
-    sCtx.arc(s.x,s.y,s.r,0,6.283);
-    sCtx.fillStyle='rgba(255,255,255,'+s.a+')';
-    sCtx.fill();
-  });
-}
-
-/* ── continent polygon data (lat,lon) ── */
-var LAND = [
-  /* South America */
-  [[12,-72],[10,-62],[8,-60],[6,-57],[4,-52],[2,-51],[0,-50],
-   [-3,-40],[-5,-35],[-8,-35],[-13,-38],[-15,-39],[-23,-43],
-   [-28,-49],[-30,-51],[-33,-52],[-34.5,-58],[-38,-62],
-   [-42,-65],[-46,-66],[-51.5,-69],[-54,-65],[-55.5,-67],
-   [-54,-68.5],[-52,-75],[-46,-75],[-41,-73],[-33.5,-71],
-   [-29.5,-71],[-23.5,-70.5],[-18.5,-70],[-12,-77],
-   [-2,-79.5],[0,-78],[4,-77],[8,-77],[11,-72],[12,-72]],
-  /* North America */
-  [[70,-140],[60,-145],[54,-132],[48,-124],[37,-122],[32,-117],
-   [23,-110],[20,-88],[16,-92],[18,-88],[21,-87],[26,-80],
-   [28,-80],[33,-80],[37,-76],[42,-70],[44,-66],[49,-55],
-   [52,-56],[58,-68],[60,-65],[64,-70],[68,-75],[70,-80],
-   [72,-95],[70,-115],[70,-140]],
-  /* Europe */
-  [[72,25],[65,14],[58,5],[52,4],[50,0],[44,4],[37,-8],
-   [38,-7],[40,-8],[42,-9],[44,-8],[46,-2],[47,5],[50,8],
-   [53,10],[55,10],[58,12],[60,18],[65,14],[70,22],[72,25]],
-  /* Africa */
-  [[37,10],[30,32],[22,37],[15,42],[11,42],[8,40],[4,38],
-   [0,42],[-5,40],[-10,40],[-18,36],[-26,33],[-34,26],
-   [-35,20],[-34,16],[-18,14],[-5,12],[0,9],[5,2],[5,-5],
-   [10,-16],[14,-17],[16,-15],[20,-17],[25,-12],[28,-14],
-   [35,36],[37,10]],
-  /* Australia */
-  [[-16,124],[-14,132],[-12,136],[-14,140],[-16,145],
-   [-20,148],[-24,151],[-28,153],[-32,152],[-36,150],
-   [-38,146],[-40,144],[-38,141],[-36,138],[-32,134],
-   [-28,128],[-24,120],[-20,118],[-16,122],[-16,124]],
-  /* Asia (simplified east) */
-  [[60,50],[55,68],[50,78],[45,75],[40,60],[35,55],[30,50],
-   [22,60],[15,52],[12,44],[22,37],[30,50],[35,55],[40,65],
-   [45,75],[50,85],[55,90],[60,72],[65,60],[60,50]]
-];
-
-/* Argentina highlight */
-var ARGENTINA = [
-  [-22,-65],[-24,-65],[-26,-66],[-29,-70],[-33.5,-70.5],
-  [-37,-73],[-41.5,-73],[-46,-75],[-52,-75],
-  [-54.5,-68.5],[-55.5,-67],[-54,-65],[-51.5,-69],
-  [-46,-66],[-42,-65],[-40,-64],[-38,-62],
-  [-34.5,-58],[-34.5,-56],[-30,-51],[-28,-55],
-  [-26,-56],[-24,-55],[-22,-62],[-22,-65]
-];
-
-function proj(lat, lon, rot){
-  var la = lat * Math.PI/180;
-  var lo = (lon + rot) * Math.PI/180;
-  return {
-    x: GCX + GR * Math.cos(la) * Math.sin(lo),
-    y: GCY - GR * Math.sin(la),
-    z: Math.cos(la) * Math.cos(lo)
-  };
-}
-
-function drawPoly(pts, fillColor, strokeColor, rot){
-  gCtx.beginPath();
-  var moved = false;
-  for(var i=0;i<pts.length;i++){
-    var p = proj(pts[i][0], pts[i][1], rot);
-    if(p.z <= 0){moved=false;continue}
-    if(!moved){gCtx.moveTo(p.x,p.y);moved=true}
-    else gCtx.lineTo(p.x,p.y);
-  }
-  gCtx.closePath();
-  if(fillColor){gCtx.fillStyle=fillColor;gCtx.fill()}
-  if(strokeColor){gCtx.strokeStyle=strokeColor;gCtx.lineWidth=.5;gCtx.stroke()}
-}
-
-function drawGlobe(rot, argHighlight){
-  gCtx.clearRect(0,0,GS,GS);
-
-  /* ocean sphere */
-  gCtx.save();
-  gCtx.beginPath();
-  gCtx.arc(GCX,GCY,GR,0,Math.PI*2);
-  var og = gCtx.createRadialGradient(GCX-GR*.32,GCY-GR*.32,0,GCX,GCY,GR);
-  og.addColorStop(0,'#5ba3f5');
-  og.addColorStop(.4,'#2563eb');
-  og.addColorStop(.8,'#1d4ed8');
-  og.addColorStop(1,'#1e3a8a');
-  gCtx.fillStyle=og;gCtx.fill();
-  gCtx.clip();
-
-  /* continents */
-  LAND.forEach(function(pts){
-    drawPoly(pts,'#1d5c3a','rgba(30,100,60,.6)',rot);
-  });
-
-  /* argentina highlight */
-  if(argHighlight){
-    drawPoly(ARGENTINA,'rgba(250,200,50,.28)','rgba(250,200,50,.7)',rot);
-  }
-
-  /* grid lines (latitude) */
-  gCtx.strokeStyle='rgba(120,180,255,.12)';gCtx.lineWidth=.7;
-  for(var lat=-60;lat<=60;lat+=30){
-    var la=lat*Math.PI/180;
-    var rx=GR*Math.cos(la);
-    var y=GCY-GR*Math.sin(la);
-    gCtx.beginPath();gCtx.ellipse(GCX,y,rx,rx*.04,0,0,Math.PI*2);gCtx.stroke();
-  }
-  /* grid lines (longitude) */
-  for(var lon=0;lon<360;lon+=30){
-    var lo=(lon+rot)*Math.PI/180;
-    if(Math.cos(lo)<=0) continue;
-    gCtx.beginPath();
-    var first2=true;
-    for(var lat2=-80;lat2<=80;lat2+=10){
-      var p2=proj(lat2,lon,rot);
-      if(p2.z<=0){first2=true;continue}
-      if(first2){gCtx.moveTo(p2.x,p2.y);first2=false}
-      else gCtx.lineTo(p2.x,p2.y);
-    }
-    gCtx.stroke();
-  }
-
-  /* specular highlight */
-  var sg=gCtx.createRadialGradient(GCX-GR*.32,GCY-GR*.32,0,GCX-GR*.2,GCY-GR*.2,GR*.75);
-  sg.addColorStop(0,'rgba(255,255,255,.18)');
-  sg.addColorStop(.5,'rgba(255,255,255,.05)');
-  sg.addColorStop(1,'rgba(255,255,255,0)');
-  gCtx.fillStyle=sg;
-  gCtx.fillRect(GCX-GR,GCY-GR,2*GR,2*GR);
-
-  gCtx.restore();
-
-  /* atmosphere glow */
-  var ag=gCtx.createRadialGradient(GCX,GCY,GR*.88,GCX,GCY,GR*1.22);
-  ag.addColorStop(0,'rgba(100,165,255,.38)');
-  ag.addColorStop(.5,'rgba(60,120,255,.12)');
-  ag.addColorStop(1,'rgba(0,40,180,0)');
-  gCtx.beginPath();gCtx.arc(GCX,GCY,GR*1.22,0,Math.PI*2);
-  gCtx.fillStyle=ag;gCtx.fill();
-
-  /* Córdoba marker */
-  if(argHighlight){
-    var cba=proj(-31.4,-64.2,rot);
-    if(cba.z>0){
-      /* pulse ring */
-      gCtx.beginPath();
-      gCtx.arc(cba.x,cba.y,7,0,Math.PI*2);
-      gCtx.strokeStyle='rgba(250,220,50,.6)';
-      gCtx.lineWidth=1.5;gCtx.stroke();
-      /* dot */
-      gCtx.beginPath();
-      gCtx.arc(cba.x,cba.y,3.5,0,Math.PI*2);
-      gCtx.fillStyle='#ffe566';gCtx.fill();
-    }
-  }
-}
-
-/* ── animation sequence ── */
-var seqPhase = 0;
-var animRunning = true;
-var startTime = null;
-var argHL = false;
-
-/* target rotation: 60° puts South America at front */
-function easeInOut(t){ return t<.5 ? 2*t*t : -1+(4-2*t)*t }
-
-function animateGlobe(ts){
-  if(!animRunning) return;
-  if(!startTime) startTime = ts;
-  var el = ts - startTime;
-
-  /* Phase 0 (0-3s): spin from 0 → 60 */
-  if(el < 3000){
-    globeR = easeInOut(el/3000) * 60;
-    drawGlobe(globeR, false);
-
-  /* Phase 1 (3-5.5s): zoom to South America */
-  } else if(el < 5500){
-    var t = (el-3000)/2500;
-    globeR = 60;
-    argHL = false;
-    drawGlobe(globeR, false);
-    var sc = 1 + easeInOut(t) * 2.2;
-    var ty = -easeInOut(t) * 12;
-    document.getElementById('globe-wrap').style.transform = 'scale('+sc+') translateY('+ty+'%)';
-
-  /* Phase 2 (5.5-8s): zoom to Córdoba, highlight Argentina */
-  } else if(el < 8000){
-    var t2 = (el-5500)/2500;
-    globeR = 60;
-    argHL = true;
-    drawGlobe(globeR, true);
-    var sc2 = 3.2 + easeInOut(t2) * 2.8;
-    var ty2 = -12 - easeInOut(t2) * 14;
-    var tx2 = easeInOut(t2) * 2.5;
-    document.getElementById('globe-wrap').style.transform =
-      'scale('+sc2+') translate('+tx2+'%, '+ty2+'%)';
-
-    /* show labels at 6.5s */
-    if(el > 6500){
-      document.getElementById('intro-labels').classList.add('show');
-      if(el > 7200) document.getElementById('byline').classList.add('show');
-    }
-
-  /* Phase 3 (8-10.5s): hold */
-  } else if(el < 10500){
-    drawGlobe(60, true);
-
-  /* Phase 4 (10.5s+): fade → open book */
-  } else {
-    animRunning = false;
-    openBook();
-    return;
-  }
-
-  requestAnimationFrame(animateGlobe);
-}
+/* intro: CSS-only, sin canvas */
 
 function skipIntro(){
-  animRunning = false;
   openBook();
 }
 
@@ -2246,9 +2006,6 @@ function initCounters(){
 /* ══════════════════════════════════════════
    BOOT
 ══════════════════════════════════════════ */
-window.addEventListener('resize', function(){
-  resizeCvs(); buildStars(); drawStars();
-});
 
 /* ══════════════════════════════════════════
    ASISTENCIAS — asistencias_v2 como fuente de verdad única.
@@ -2416,8 +2173,7 @@ function cargarDesdeSupabase(){
 }
 
 window.addEventListener('load', function(){
-  resizeCvs(); buildStars(); drawStars(); drawGlobe(0,false);
-  requestAnimationFrame(animateGlobe);
+  setTimeout(openBook, 3400);
   setTimeout(cargarDesdeSupabase, 800);
 });
 
@@ -2475,7 +2231,7 @@ window.marcarAsist = marcarAsist;
 var SUPA_URL_CRUD = 'https://hufflxvocbfbhrayylad.supabase.co';
 var SUPA_KEY_CRUD = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh1ZmZseHZvY2JmYmhyYXl5bGFkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI0OTc2ODUsImV4cCI6MjA5ODA3MzY4NX0.MVqKYtuKeOlT4jgx13sTT2lZ2tuzChEmLLQMCe1xzG4';
 var USERNAME_CRUD = 'manufreytes';
-var _datosCache   = {"ALGEBRA_LINEAL": {"tipo": "Final", "estado": "aprobada", "nota_promocion": 7, "parciales": [8, 8], "final": 8, "año": "1º Año"}, "ANATOMIA_PARA_INGENIEROS": {"tipo": "Final", "estado": "aprobada", "nota_promocion": 7, "parciales": [], "final": 9, "año": "2º Año"}, "ANALISIS_MATEMATICO_1": {"tipo": "Final", "estado": "aprobada", "nota_promocion": 7, "parciales": [10, 10], "final": 10, "año": "1º Año"}, "ANALISIS_MATEMATICO_2": {"tipo": "Final", "estado": "aprobada", "nota_promocion": 7, "parciales": [10, 4], "final": 7, "año": "2º Año"}, "ANALISIS_MATEMATICO_3": {"tipo": "Final", "estado": "aprobada", "nota_promocion": 7, "parciales": [10, 9], "final": 10, "año": "2º Año"}, "ELECTROTECNIA_GENERAL_Y_MAQUINAS_ELECTRICAS": {"tipo": "Final", "estado": "aprobada", "nota_promocion": 7, "parciales": [8, 10], "final": 9, "año": "3º Año"}, "ELECTRONICA": {"tipo": "Final", "estado": "aprobada", "nota_promocion": 7, "parciales": [10, 8], "final": 9, "año": "2º Año"}, "ELECTRONICA_DIGITAL_1": {"tipo": "Final", "estado": "aprobada", "nota_promocion": 7, "parciales": [8, 9], "final": 8.8, "año": "3º Año"}, "ESTATICA_Y_RESISTENCA_DE_LOS_MATERIALES": {"tipo": "Final", "estado": "aprobada", "nota_promocion": 7, "parciales": [10, 8.3], "final": 9, "año": "2º Año"}, "FISIOLOGIA_HUMANA": {"tipo": "Final", "estado": "aprobada", "nota_promocion": 7, "parciales": [8, 9], "final": 9, "año": "3º Año"}, "FISICA_1": {"tipo": "Final", "estado": "aprobada", "nota_promocion": 7, "parciales": [10, 7, 4, 10], "final": 9, "año": "1º Año"}, "FISICA_2": {"tipo": "Final", "estado": "aprobada", "nota_promocion": 7, "parciales": [8, 9, 8, 7], "final": 6, "año": "2º Año"}, "HISTOLOGIA_PARA_INGENIEROS": {"tipo": "Final", "estado": "aprobada", "nota_promocion": 7, "parciales": [10, 9, 9], "final": 9, "año": "2º Año"}, "INFORMATICA_Y_CALCULO_NUMERICO": {"tipo": "Final", "estado": "aprobada", "nota_promocion": 7, "parciales": [10, 8, 10, 10, 10], "final": 9, "año": "2º Año"}, "PROBABILIDAD_Y_ESTADISTICA": {"tipo": "Final", "estado": "aprobada", "nota_promocion": 7, "parciales": [9, 9], "final": 9, "año": "2º Año"}, "QUIMICA_ORGANICA_Y_BIOLOGICA": {"tipo": "Final", "estado": "aprobada", "nota_promocion": 7, "parciales": [5, 8, 7], "final": 7, "año": "1º Año"}, "QUIMICA": {"tipo": "Final", "estado": "aprobada", "nota_promocion": 7, "parciales": [7, 9], "final": 8, "año": "1º Año"}, "SENALES_Y_SISTEMAS": {"tipo": "Final", "estado": "aprobada", "nota_promocion": 7, "parciales": [9, 9], "final": 9, "año": "3º Año"}, "SISTEMAS_DE_REPRESENTACION": {"tipo": "Final", "estado": "aprobada", "nota_promocion": 7, "parciales": [4, 6], "final": 6, "año": "1º Año"}, "TALLER_Y_LABORATORIO": {"tipo": "Final", "estado": "aprobada", "nota_promocion": 7, "parciales": [8, 10], "final": 8.5, "año": "1º Año"}, "FISICA": {"tipo": "Sin Nota", "estado": "aprobada", "año": "1º Año"}, "INGLES": {"tipo": "Sin Nota", "estado": "aprobada", "año": "2º Año"}, "MATEMATICA": {"tipo": "Sin Nota", "estado": "aprobada", "año": "1º Año"}, "INTRODUCCION A LA VIDA UNIVERSITARIA": {"tipo": "Sin Nota", "estado": "aprobada", "año": "1º Año"}, "manuel": {"año": "4º Año", "tipo": "Promocional", "final": 0, "estado": "en_curso", "parciales": [6], "asistencias": {}, "nota_promocion": 8}, "manuel5": {"año": "5º Año", "tipo": "Final", "final": 0, "estado": "en_curso", "parciales": [8], "asistencias": {}, "nota_promocion": 7, "calendario": [{"fecha": "10/07/2026", "titulo": "Parcial 1"}, {"fecha": "17/07/2026", "titulo": "Parcial 2"}]}, "manuel6": {"año": "Optativa", "tipo": "Final", "final": 0, "estado": "en_curso", "parciales": [4], "asistencias": {}, "nota_promocion": 7, "calendario": [{"fecha": "30/07/2026", "titulo": "Parcial 3"}]}, "materia_prueba": {"año": "5º Año", "tipo": "Promocional", "final": 0, "estado": "en_curso", "parciales": [6], "asistencias": {}, "nota_promocion": 7}};   /* datos actuales inyectados por Python */
+var _datosCache   = {"ALGEBRA_LINEAL": {"tipo": "Final", "estado": "aprobada", "nota_promocion": 7, "parciales": [8, 8], "final": 8, "año": "1º Año"}, "ANATOMIA_PARA_INGENIEROS": {"tipo": "Final", "estado": "aprobada", "nota_promocion": 7, "parciales": [], "final": 9, "año": "2º Año"}, "ANALISIS_MATEMATICO_1": {"tipo": "Final", "estado": "aprobada", "nota_promocion": 7, "parciales": [10, 10], "final": 10, "año": "1º Año"}, "ANALISIS_MATEMATICO_2": {"tipo": "Final", "estado": "aprobada", "nota_promocion": 7, "parciales": [10, 4], "final": 7, "año": "2º Año"}, "ANALISIS_MATEMATICO_3": {"tipo": "Final", "estado": "aprobada", "nota_promocion": 7, "parciales": [10, 9], "final": 10, "año": "2º Año"}, "ELECTROTECNIA_GENERAL_Y_MAQUINAS_ELECTRICAS": {"tipo": "Final", "estado": "aprobada", "nota_promocion": 7, "parciales": [8, 10], "final": 9, "año": "3º Año"}, "ELECTRONICA": {"tipo": "Final", "estado": "aprobada", "nota_promocion": 7, "parciales": [10, 8], "final": 9, "año": "2º Año"}, "ELECTRONICA_DIGITAL_1": {"tipo": "Final", "estado": "aprobada", "nota_promocion": 7, "parciales": [8, 9], "final": 8.8, "año": "3º Año"}, "ESTATICA_Y_RESISTENCA_DE_LOS_MATERIALES": {"tipo": "Final", "estado": "aprobada", "nota_promocion": 7, "parciales": [10, 8.3], "final": 9, "año": "2º Año"}, "FISIOLOGIA_HUMANA": {"tipo": "Final", "estado": "aprobada", "nota_promocion": 7, "parciales": [8, 9], "final": 9, "año": "3º Año"}, "FISICA_1": {"tipo": "Final", "estado": "aprobada", "nota_promocion": 7, "parciales": [10, 7, 4, 10], "final": 9, "año": "1º Año"}, "FISICA_2": {"tipo": "Final", "estado": "aprobada", "nota_promocion": 7, "parciales": [8, 9, 8, 7], "final": 6, "año": "2º Año"}, "HISTOLOGIA_PARA_INGENIEROS": {"tipo": "Final", "estado": "aprobada", "nota_promocion": 7, "parciales": [10, 9, 9], "final": 9, "año": "2º Año"}, "INFORMATICA_Y_CALCULO_NUMERICO": {"tipo": "Final", "estado": "aprobada", "nota_promocion": 7, "parciales": [10, 8, 10, 10, 10], "final": 9, "año": "2º Año"}, "PROBABILIDAD_Y_ESTADISTICA": {"tipo": "Final", "estado": "aprobada", "nota_promocion": 7, "parciales": [9, 9], "final": 9, "año": "2º Año"}, "QUIMICA_ORGANICA_Y_BIOLOGICA": {"tipo": "Final", "estado": "aprobada", "nota_promocion": 7, "parciales": [5, 8, 7], "final": 7, "año": "1º Año"}, "QUIMICA": {"tipo": "Final", "estado": "aprobada", "nota_promocion": 7, "parciales": [7, 9], "final": 8, "año": "1º Año"}, "SENALES_Y_SISTEMAS": {"tipo": "Final", "estado": "aprobada", "nota_promocion": 7, "parciales": [9, 9], "final": 9, "año": "3º Año"}, "SISTEMAS_DE_REPRESENTACION": {"tipo": "Final", "estado": "aprobada", "nota_promocion": 7, "parciales": [4, 6], "final": 6, "año": "1º Año"}, "TALLER_Y_LABORATORIO": {"tipo": "Final", "estado": "aprobada", "nota_promocion": 7, "parciales": [8, 10], "final": 8.5, "año": "1º Año"}, "FISICA": {"tipo": "Sin Nota", "estado": "aprobada", "año": "1º Año"}, "INGLES": {"tipo": "Sin Nota", "estado": "aprobada", "año": "2º Año"}, "MATEMATICA": {"tipo": "Sin Nota", "estado": "aprobada", "año": "1º Año"}, "INTRODUCCION A LA VIDA UNIVERSITARIA": {"tipo": "Sin Nota", "estado": "aprobada", "año": "1º Año"}, "manuel": {"año": "4º Año", "tipo": "Promocional", "final": 0, "estado": "en_curso", "parciales": [6], "asistencias": [{"fecha": "28/06/2026", "asistio": true}], "nota_promocion": 8, "calendario": [{"titulo": "parcial 2", "fecha": "22/07/2026"}]}, "manuel5": {"año": "5º Año", "tipo": "Final", "final": 0, "estado": "en_curso", "parciales": [8], "asistencias": [{"fecha": "27/06/2026", "asistio": true}, {"fecha": "28/06/2026", "asistio": true}, {"fecha": "29/06/2026", "asistio": false}], "nota_promocion": 7, "calendario": [{"fecha": "10/07/2026", "titulo": "Parcial 1"}, {"fecha": "17/07/2026", "titulo": "Parcial 2"}]}, "manuel6": {"año": "Optativa", "tipo": "Final", "final": 0, "estado": "en_curso", "parciales": [4], "asistencias": [{"fecha": "29/06/2026", "asistio": true}], "nota_promocion": 7, "calendario": [{"fecha": "30/07/2026", "titulo": "Parcial 3"}]}, "materia_prueba": {"año": "5º Año", "tipo": "Promocional", "final": 0, "estado": "en_curso", "parciales": [6], "asistencias": {}, "nota_promocion": 7}};   /* datos actuales inyectados por Python */
 
 function _supaHeaders(){
   return {
@@ -2540,7 +2296,7 @@ function submitAgregar(){
     año:     document.getElementById('ag-anio').value,
     tipo:    tipo,
     estado:  document.getElementById('ag-estado').value,
-    asistencias: {}
+    asistencias: []
   };
   if(!sinNota){
     entry.parciales     = parcs;
@@ -2554,6 +2310,7 @@ function submitAgregar(){
     btn.disabled = false; btn.textContent = 'Guardar materia';
     if(ok){
       _msgAgregar('¡' + nombre.replace(/_/g,' ') + ' guardada!','ok');
+      alert('¡Materia guardada! Ojo: hasta que no abras la app de escritorio (se sincroniza sola) y vuelvas a generar el QR, esta materia no va a aparecer en las páginas del libro.');
       document.getElementById('ag-nombre').value    = '';
       document.getElementById('ag-nota').value      = '';
       document.getElementById('ag-notaprom').value  = '';
