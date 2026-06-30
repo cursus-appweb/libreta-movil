@@ -1,6 +1,6 @@
 {
-  "name": "Libreta Universitaria",
-  "short_name": "Libreta",
+  "name": "Cursus",
+  "short_name": "Cursus",
   "description": "Tu historial academico en el celular",
   "start_url": "./",
   "scope": "./",
