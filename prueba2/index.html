@@ -479,6 +479,13 @@ button{font:inherit;cursor:pointer;border:none;background:none}
 .ah-ok  {background:rgba(16,185,129,.12);color:var(--ok); border:1px solid rgba(16,185,129,.2)}
 .ah-no  {background:rgba(239,68,68,.12); color:var(--mal);border:1px solid rgba(239,68,68,.2)}
 .ah-empty{font-size:.68rem;color:var(--dim);font-style:italic}
+.asist-date-row{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.asist-date-lbl{font-size:.68rem;color:var(--dim);white-space:nowrap}
+.asist-date{
+  flex:1;background:#1e2433;border:1px solid #2d3748;border-radius:8px;
+  color:white;padding:6px 8px;font-size:.82rem;cursor:pointer;
+  color-scheme:dark;min-height:34px;
+}
 .asist-btns{display:flex;gap:8px}
 .asist-btn{
   flex:1;padding:9px 0;border-radius:9px;
@@ -694,7 +701,7 @@ button{font:inherit;cursor:pointer;border:none;background:none}
         <div class="cover-seal">🎓</div>
         <div class="cover-line"></div>
         <h1 class="cover-title">Cursus</h1>
-        <p class="cover-sub">30 jun 2026 · 23:22</p>
+        <p class="cover-sub">30 jun 2026 · 23:39</p>
         <div class="cover-line"></div>
         <div class="cover-stats">
           <div class="cstat"><div class="cn" data-count="26">0</div><div class="cl">Total</div></div>
@@ -1634,13 +1641,17 @@ button{font:inherit;cursor:pointer;border:none;background:none}
 </div></div></div>
 <div class="bpage" id="pg-asistencias"><div class="pg-inner"><div class="pg-header"><button class="btn-back" onclick="goPage('pg-index')">← Índice</button><span class="pg-title">Asistencias</span><span class="pg-count">1 en curso</span></div><div id="sync-badge" class="sync-badge sync-ok">✓ Todo sincronizado</div><div class="asist-nota"><strong>¿Cómo funciona?</strong> Marcá cada clase —presente o ausente— y el registro queda guardado en el celular aunque la compu esté apagada. Cuando la compu esté activa, todo se sincroniza automático.</div><div class="asist-card" data-mat="MANUEL_FREYTES_PRUEBA">
   <div class="asist-top">
-    <div class="asist-pct " id="pct-MANUEL_FREYTES_PRUEBA">—</div>
+    <div class="asist-pct pct-bad" id="pct-MANUEL_FREYTES_PRUEBA">0%</div>
     <div class="asist-info">
       <div class="asist-nom">Manuel Freytes Prueba</div>
-      <div class="asist-stats" id="stats-MANUEL_FREYTES_PRUEBA">0&nbsp;pres · 0&nbsp;aus · 0&nbsp;clases</div>
+      <div class="asist-stats" id="stats-MANUEL_FREYTES_PRUEBA">0&nbsp;pres · 1&nbsp;aus · 1&nbsp;clase</div>
     </div>
   </div>
-  <div class="ah-hist" id="hist-MANUEL_FREYTES_PRUEBA"><span class="ah-empty">Sin registros aún — marcá tu primera clase</span></div>
+  <div class="ah-hist" id="hist-MANUEL_FREYTES_PRUEBA"><span class="ah-item ah-no">✗ 30/06/2026</span></div>
+  <div class="asist-date-row">
+    <span class="asist-date-lbl">Fecha:</span>
+    <input type="date" id="fecha-MANUEL_FREYTES_PRUEBA" class="asist-date">
+  </div>
   <div class="asist-btns">
     <button class="asist-btn btn-pres" onclick="marcarAsist('MANUEL_FREYTES_PRUEBA',true,this)">✓&nbsp;Presente</button>
     <button class="asist-btn btn-aus"  onclick="marcarAsist('MANUEL_FREYTES_PRUEBA',false,this)">✗&nbsp;Ausente</button>
@@ -1919,10 +1930,24 @@ function _actualizarCardCompleta(slug, datos){
   stEl.textContent=pres+' pres · '+aus+' aus · '+total+' clase'+(total===1?'':'s');
 }
 
+function _fechaDeInput(slug){
+  var inp=document.getElementById('fecha-'+slug);
+  if(inp && inp.value){
+    var p=inp.value.split('-');
+    return p[2]+'/'+p[1]+'/'+p[0];
+  }
+  var hoy=new Date();
+  return ('0'+hoy.getDate()).slice(-2)+'/'+('0'+(hoy.getMonth()+1)).slice(-2)+'/'+hoy.getFullYear();
+}
+
+function _todayInputValue(){
+  var h=new Date();
+  return h.getFullYear()+'-'+('0'+(h.getMonth()+1)).slice(-2)+'-'+('0'+h.getDate()).slice(-2);
+}
+
 function marcarAsist(materia, asistio, btn){
   if(btn) btn.disabled=true;
-  var hoy=new Date();
-  var fecha=('0'+hoy.getDate()).slice(-2)+'/'+('0'+(hoy.getMonth()+1)).slice(-2)+'/'+hoy.getFullYear();
+  var fecha=_fechaDeInput(materia);
 
   /* 1. Actualizar UI inmediatamente */
   _actualizarUi(materia, asistio, fecha);
@@ -2035,6 +2060,9 @@ function cargarDesdeSupabase(){
 window.addEventListener('load', function(){
   setTimeout(openBook, 3400);
   setTimeout(cargarDesdeSupabase, 800);
+  /* inicializar inputs de fecha con hoy */
+  var hoyVal = _todayInputValue();
+  document.querySelectorAll('.asist-date').forEach(function(inp){ inp.value = hoyVal; });
 });
 
 /* ── exponer al scope global (llamadas desde onclick del HTML) ── */
@@ -2095,7 +2123,7 @@ var SUPA_URL_CRUD = 'https://hufflxvocbfbhrayylad.supabase.co';
 var SUPA_KEY_CRUD = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh1ZmZseHZvY2JmYmhyYXl5bGFkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI0OTc2ODUsImV4cCI6MjA5ODA3MzY4NX0.MVqKYtuKeOlT4jgx13sTT2lZ2tuzChEmLLQMCe1xzG4';
 var USERNAME_CRUD = 'prueba2';
 var SYNC_TOKEN_CRUD = 'YOSLg1f8tPehqNpTguCVQb5oHdKEgKZB_vuvkyOkbuM';
-var _datosCache   = {"ALGEBRA_LINEAL": {"tipo": "Final", "estado": "aprobada", "nota_promocion": 7.0, "parciales": [], "final": 8.0, "año": "2º Año"}, "ANATOMIA_PARA_INGENIEROS": {"tipo": "Final", "estado": "aprobada", "nota_promocion": 7.0, "parciales": [], "final": 9.0, "año": "Desconocido"}, "ANALISIS_MATEMATICO_1": {"tipo": "Final", "estado": "aprobada", "nota_promocion": 7.0, "parciales": [], "final": 10.0, "año": "Desconocido"}, "ANALISIS_MATEMATICO_2": {"tipo": "Final", "estado": "aprobada", "nota_promocion": 7.0, "parciales": [], "final": 7.0, "año": "Desconocido"}, "ANALISIS_MATEMATICO_3": {"tipo": "Final", "estado": "aprobada", "nota_promocion": 7.0, "parciales": [], "final": 10.0, "año": "Desconocido"}, "ELECTROTECNIA_GENERAL_Y_MAQUINAS_ELECTRICAS": {"tipo": "Final", "estado": "aprobada", "nota_promocion": 7.0, "parciales": [], "final": 9.0, "año": "Desconocido"}, "ELECTRONICA": {"tipo": "Final", "estado": "aprobada", "nota_promocion": 7.0, "parciales": [], "final": 9.0, "año": "Desconocido"}, "ELECTRONICA_DIGITAL_1": {"tipo": "Final", "estado": "aprobada", "nota_promocion": 7.0, "parciales": [], "final": 8.8, "año": "Desconocido"}, "ESTATICA_Y_RESISTENCA_DE_LOS_MATERIALES": {"tipo": "Final", "estado": "aprobada", "nota_promocion": 7.0, "parciales": [], "final": 9.0, "año": "Desconocido"}, "FISIOLOGIA_HUMANA": {"tipo": "Final", "estado": "aprobada", "nota_promocion": 7.0, "parciales": [], "final": 9.0, "año": "Desconocido"}, "FISICA_1": {"tipo": "Final", "estado": "aprobada", "nota_promocion": 7.0, "parciales": [], "final": 9.0, "año": "Desconocido"}, "FISICA_2": {"tipo": "Final", "estado": "aprobada", "nota_promocion": 7.0, "parciales": [], "final": 6.0, "año": "Desconocido"}, "HISTOLOGIA_PARA_INGENIEROS": {"tipo": "Final", "estado": "aprobada", "nota_promocion": 7.0, "parciales": [], "final": 9.0, "año": "Desconocido"}, "INFORMATICA_Y_CALCULO_NUMERICO": {"tipo": "Final", "estado": "aprobada", "nota_promocion": 7.0, "parciales": [], "final": 9.0, "año": "Desconocido"}, "PROBABILIDAD_Y_ESTADISTICA": {"tipo": "Final", "estado": "aprobada", "nota_promocion": 7.0, "parciales": [], "final": 9.0, "año": "Desconocido"}, "QUIMICA_ORGANICA_Y_BIOLOGICA": {"tipo": "Final", "estado": "aprobada", "nota_promocion": 7.0, "parciales": [], "final": 7.0, "año": "Desconocido"}, "QUIMICA": {"tipo": "Final", "estado": "aprobada", "nota_promocion": 7.0, "parciales": [], "final": 8.0, "año": "Desconocido"}, "SENALES_Y_SISTEMAS": {"tipo": "Final", "estado": "aprobada", "nota_promocion": 7.0, "parciales": [], "final": 9.0, "año": "Desconocido"}, "SISTEMAS_DE_REPRESENTACION": {"tipo": "Final", "estado": "aprobada", "nota_promocion": 7.0, "parciales": [], "final": 6.0, "año": "Desconocido"}, "TALLER_Y_LABORATORIO": {"tipo": "Final", "estado": "aprobada", "nota_promocion": 7.0, "parciales": [], "final": 8.5, "año": "Desconocido"}, "MANUEL_FREYTES_PRUEBA": {"tipo": "Promocional", "estado": "en_curso", "año": "2º Año", "nota_promocion": 7.0, "parciales": [8.0], "final": 0.0}, "AMBIENTACION_UNIVERSITARIA": {"tipo": "Sin Nota", "estado": "aprobada", "año": "Desconocido"}, "FISICA": {"tipo": "Sin Nota", "estado": "aprobada", "año": "Desconocido"}, "FISICA_Y_QUIMICA": {"tipo": "Sin Nota", "estado": "aprobada", "año": "Desconocido"}, "MATEMATICA": {"tipo": "Sin Nota", "estado": "aprobada", "año": "Desconocido"}, "MODULO_DE_INGLES": {"tipo": "Sin Nota", "estado": "aprobada", "año": "Desconocido"}};   /* datos actuales inyectados por Python */
+var _datosCache   = {"ALGEBRA_LINEAL": {"tipo": "Final", "estado": "aprobada", "nota_promocion": 7.0, "parciales": [], "final": 8.0, "año": "2º Año"}, "ANATOMIA_PARA_INGENIEROS": {"tipo": "Final", "estado": "aprobada", "nota_promocion": 7.0, "parciales": [], "final": 9.0, "año": "Desconocido"}, "ANALISIS_MATEMATICO_1": {"tipo": "Final", "estado": "aprobada", "nota_promocion": 7.0, "parciales": [], "final": 10.0, "año": "Desconocido"}, "ANALISIS_MATEMATICO_2": {"tipo": "Final", "estado": "aprobada", "nota_promocion": 7.0, "parciales": [], "final": 7.0, "año": "Desconocido"}, "ANALISIS_MATEMATICO_3": {"tipo": "Final", "estado": "aprobada", "nota_promocion": 7.0, "parciales": [], "final": 10.0, "año": "Desconocido"}, "ELECTROTECNIA_GENERAL_Y_MAQUINAS_ELECTRICAS": {"tipo": "Final", "estado": "aprobada", "nota_promocion": 7.0, "parciales": [], "final": 9.0, "año": "Desconocido"}, "ELECTRONICA": {"tipo": "Final", "estado": "aprobada", "nota_promocion": 7.0, "parciales": [], "final": 9.0, "año": "Desconocido"}, "ELECTRONICA_DIGITAL_1": {"tipo": "Final", "estado": "aprobada", "nota_promocion": 7.0, "parciales": [], "final": 8.8, "año": "Desconocido"}, "ESTATICA_Y_RESISTENCA_DE_LOS_MATERIALES": {"tipo": "Final", "estado": "aprobada", "nota_promocion": 7.0, "parciales": [], "final": 9.0, "año": "Desconocido"}, "FISIOLOGIA_HUMANA": {"tipo": "Final", "estado": "aprobada", "nota_promocion": 7.0, "parciales": [], "final": 9.0, "año": "Desconocido"}, "FISICA_1": {"tipo": "Final", "estado": "aprobada", "nota_promocion": 7.0, "parciales": [], "final": 9.0, "año": "Desconocido"}, "FISICA_2": {"tipo": "Final", "estado": "aprobada", "nota_promocion": 7.0, "parciales": [], "final": 6.0, "año": "Desconocido"}, "HISTOLOGIA_PARA_INGENIEROS": {"tipo": "Final", "estado": "aprobada", "nota_promocion": 7.0, "parciales": [], "final": 9.0, "año": "Desconocido"}, "INFORMATICA_Y_CALCULO_NUMERICO": {"tipo": "Final", "estado": "aprobada", "nota_promocion": 7.0, "parciales": [], "final": 9.0, "año": "Desconocido"}, "PROBABILIDAD_Y_ESTADISTICA": {"tipo": "Final", "estado": "aprobada", "nota_promocion": 7.0, "parciales": [], "final": 9.0, "año": "Desconocido"}, "QUIMICA_ORGANICA_Y_BIOLOGICA": {"tipo": "Final", "estado": "aprobada", "nota_promocion": 7.0, "parciales": [], "final": 7.0, "año": "Desconocido"}, "QUIMICA": {"tipo": "Final", "estado": "aprobada", "nota_promocion": 7.0, "parciales": [], "final": 8.0, "año": "Desconocido"}, "SENALES_Y_SISTEMAS": {"tipo": "Final", "estado": "aprobada", "nota_promocion": 7.0, "parciales": [], "final": 9.0, "año": "Desconocido"}, "SISTEMAS_DE_REPRESENTACION": {"tipo": "Final", "estado": "aprobada", "nota_promocion": 7.0, "parciales": [], "final": 6.0, "año": "Desconocido"}, "TALLER_Y_LABORATORIO": {"tipo": "Final", "estado": "aprobada", "nota_promocion": 7.0, "parciales": [], "final": 8.5, "año": "Desconocido"}, "MANUEL_FREYTES_PRUEBA": {"tipo": "Promocional", "estado": "en_curso", "año": "2º Año", "nota_promocion": 7.0, "parciales": [8.0], "final": 0.0, "asistencias": [{"fecha": "30/06/2026", "asistio": false}]}, "AMBIENTACION_UNIVERSITARIA": {"tipo": "Sin Nota", "estado": "aprobada", "año": "Desconocido"}, "FISICA": {"tipo": "Sin Nota", "estado": "aprobada", "año": "Desconocido"}, "FISICA_Y_QUIMICA": {"tipo": "Sin Nota", "estado": "aprobada", "año": "Desconocido"}, "MATEMATICA": {"tipo": "Sin Nota", "estado": "aprobada", "año": "Desconocido"}, "MODULO_DE_INGLES": {"tipo": "Sin Nota", "estado": "aprobada", "año": "Desconocido"}};   /* datos actuales inyectados por Python */
 
 function _supaHeaders(){
   return {
